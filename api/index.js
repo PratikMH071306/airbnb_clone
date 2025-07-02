@@ -9,6 +9,12 @@ const bcryptSalt = bcrypt.genSaltSync(10);
 
 const allowedOrigins = ["http://localhost:5173", "http://127.0.0.1:5173"];
 
+// Video stop at 1:17:42 [1/7/2025]
+
+
+
+
+
 //For parsing application/json
 app.use(express.json());
 
@@ -32,14 +38,12 @@ app.get("/test", (req, res) => {
 
 app.post("/register", async (req, res) => {
   const { name, email, password } = req.body;
-
   try {
     const userDoc = await UserModel.create({
       name,
       email,
       password: bcrypt.hashSync(password, bcryptSalt),
     });
-
     res.json(userDoc);
   } catch (error) {
     console.error("Error during registration:", error);
@@ -47,13 +51,22 @@ app.post("/register", async (req, res) => {
   }
 });
 
+app.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  const userDoc = await UserModel.findOne({ email });
+  if (userDoc) {
+    res.json("Login successful!");
+  } else {
+    res.status(404).json("User not found");
+  }
+});
+
 app.listen(4000);
 
 //Here at the stage i wanna add the DB
-
 //current IP address (223.233.83.98)
 //Username : pratikraorane65
 //Password : SOZe8vHFCslU68Hv
-
 //connection string
 //mongodb+srv://pratikraorane65:SOZe8vHFCslU68Hv@booking-airbnb-app.ycwfdst.mongodb.net/?retryWrites=true&w=majority&appName=booking-airbnb-app
