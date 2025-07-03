@@ -11,10 +11,6 @@ const allowedOrigins = ["http://localhost:5173", "http://127.0.0.1:5173"];
 
 // Video stop at 1:17:42 [1/7/2025]
 
-
-
-
-
 //For parsing application/json
 app.use(express.json());
 
@@ -56,7 +52,12 @@ app.post("/login", async (req, res) => {
 
   const userDoc = await UserModel.findOne({ email });
   if (userDoc) {
-    res.json("Login successful!");
+    const passOk = bcrypt.compareSync(password, userDoc.password);
+    if (!passOk) {
+      res.json("password ok");
+    } else {
+      res.status(422).json("wrong password");
+    }
   } else {
     res.status(404).json("User not found");
   }
